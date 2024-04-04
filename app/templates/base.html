@@ -11,10 +11,24 @@
                 SMART_COOK
           {% endblock %}
       </title>
+      <style>
+        .container {
+            text-align: center;
+        }
+    
+        .generated-text-box {
+            border: 1px solid #ccc; /* Add a border */
+            padding: 10px; /* Add padding for spacing */
+            margin-top: 20px; /* Add margin to separate from other content */
+            width: 70%; /* Set a width for the box */
+            margin: 0 auto; /* Center the box horizontally */
+        }
+    </style>
+    
    </head>
    <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">SMART_COOK</a>
+      <a class="navbar-brand" href="/">SMART_COOK</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -24,7 +38,7 @@
                 <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">Menu</a>
+                <a class="nav-link" href="{{ url_for('welcome')}}">Menu</a>
             </li>
         </ul>
         <ul class="navbar-nav">

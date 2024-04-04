@@ -45,4 +45,51 @@
         </div>
     </div>
 </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="dietary-control">
+                <h2>Select one below</h2>
+                <p>Choose the type of food you want</p>
+
+                <div class="button-group">
+                    <form method="post">
+                        <button class ="btn btn-warning" type="submit" name="action" value="action1">Breakfast</button>
+                        <button class="btn btn-secondary" type="submit" name="action" value="action2">Lunch</button>
+                        <button class="btn btn-info" type="submit" name="action" value="action3">Dinner</button>
+                        <button class="btn btn-danger" type="submit" name="action" value="action4">Snack</button>
+
+                    </form>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="dietary-control">
+                {% if generated_text %}
+                <div >
+                    <h2>Generated dish:</h2>
+                </div>
+                <br>
+                <div class="generated-text-box">
+                    <pre>
+                    {{ generated_text }}
+                    </pre>
+                </div>
+            {% else %}
+                <div class="generated-text-box">
+                    <h2>Not generated</h2>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
