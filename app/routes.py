@@ -4,7 +4,7 @@ from app import app, db
 from app.models import Users
 from app.forms import LoginForm, RegistrationForm,MyForm
 from app.gemini import rmodel
-
+from sqlalchemy.exc import SQLAlchemyError
 
 
 convo = rmodel.start_chat(history=[])
@@ -20,20 +20,28 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('welcome'))
+    #if current_user.is_authenticated:
+    #    return redirect(url_for('welcome'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user)
-            next_page = request.args.get('next')  # Get the next page from the URL query parameters
-            return redirect(next_page or url_for('welcome'))  # Redirect to the next page if provided, else to the welcome page
+        attempted_user = Users.query.filter_by(username = form.username.data).first()
+        print(attempted_user.username)
+        if attempted_user and attempted_user.check_password_correction(attempted_password=form.password.data):
+        
+            login_user(attempted_user)  
+           # next_page = request.args.get('next')  # Get the next page from the URL query parameters
+            #return redirect(next_page or url_for('welcome'))  # Redirect to the next page if provided, else to the welcome page
+            return redirect(url_for('welcome'))
+
     return render_template('login.html', form=form)
+
 
 @app.route('/logout')
 def logout():
     logout_user()
+    #this  is enough this inbuilt function will automatically logout the user
+    #now we can put some flashmesssage to show the user that v have logout but this flash shit is not working in my 
+    #flash("logged out succesfully",category='info')
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -42,12 +50,22 @@ def register():
         return redirect(url_for('welcome'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = Users(username=form.username.data, email=form.email.data)
+        user = Users()
+        user.username=form.username.data
+        user.email=form.email.data
         user.height = form.height.data
         user.weight = form.weight.data
         user.password = form.password.data
+        bmi = "{:.2f}".format((form.weight.data)/((form.height.data)**2))
+        user.bmi= bmi
         db.session.add(user)
         db.session.commit()
+        try:
+          attempted_user = Users.query.all()
+          print(attempted_user)
+        except SQLAlchemyError as e:
+           print("An error occurred while retrieving users:", e)
+        
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
@@ -59,6 +77,11 @@ def welcome():
 
 @app.route('/diet',methods=['GET', 'POST'])
 def diet():
+
+
+
+
+
     generated_text = None
     if request.method == 'POST':
         action = request.form['action']
